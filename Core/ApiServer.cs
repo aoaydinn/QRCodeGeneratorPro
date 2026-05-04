@@ -12,15 +12,51 @@ public class ApiServer
     private static bool isRunning = false;
 
     public static bool IsRunning => isRunning;
+    public static int Port { get; private set; } = 5000;
 
-    public static void Start(int port = 5000)
+    public static void Start(int startPort = 5000)
     {
         if (isRunning) return;
 
-        listener = new HttpListener();
-        listener.Prefixes.Add($"http://localhost:{port}/");
-        listener.Start();
-        isRunning = true;
+        int port = startPort;
+        while (port < startPort + 10)
+        {
+            try
+            {
+                listener = new HttpListener();
+                listener.Prefixes.Add($"http://localhost:{port}/");
+                listener.Start();
+                Port = port;
+                isRunning = true;
+                break;
+            }
+            catch (HttpListenerException ex)
+            {
+                listener?.Close();
+                if (ex.ErrorCode == 5) // Access Denied -> Try 127.0.0.1
+                {
+                    try
+                    {
+                        listener = new HttpListener();
+                        listener.Prefixes.Add($"http://127.0.0.1:{port}/");
+                        listener.Start();
+                        Port = port;
+                        isRunning = true;
+                        break;
+                    }
+                    catch 
+                    { 
+                        listener?.Close(); 
+                    }
+                }
+                port++;
+            }
+        }
+
+        if (!isRunning)
+        {
+            throw new Exception("Uygun bir port bulunamadı veya erişim reddedildi. Lütfen uygulamayı Yönetici olarak çalıştırın.");
+        }
 
         listenerThread = new Thread(new ThreadStart(Listen));
         listenerThread.Start();

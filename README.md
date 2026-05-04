@@ -37,10 +37,22 @@ QR Kod Oluşturucu Pro, gelişmiş özelliklere sahip, hem tekil hem de toplu (b
 4. **Toplu Oluştur** butonuna basıp işlemin otomatik olarak bitmesini bekleyin.
 
 ### 3. API Kullanımı
-1. Ana ekrandaki **API Başlat** butonuna basın (buton yeşil renge dönecek ve API statüsü "Aktif" olacaktır).
-2. Herhangi bir tarayıcıdan veya Postman uygulamasından uygulamanıza HTTP GET isteği atarak QR kod üretebilirsiniz.  
-   **Örnek Kullanım:**  
-   `http://localhost:5000/api/generate?content=Hello+World&type=QRCode&ecc=Q&moduleshape=1&eyeshape=2&fgcolor=000000&bgcolor=FFFFFF`
+1. Ana ekrandaki **API Başlat** butonuna basın. (Buton metni "API Durdur" olarak değişecek ve sağ altta API'nin hangi adreste aktif olduğu yazacaktır).
+2. Sistem, varsayılan olarak `5000` portunu deneyecektir. Eğer bu port doluysa veya işletim sisteminiz engelliyorsa otomatik olarak bir sonraki boş portu (`5001`, `5002` vb.) bularak başlatacaktır. Lütfen **sağ alttaki yeşil bildirimde yazan port numarasını** dikkate alın.
+3. Herhangi bir tarayıcıdan, Postman veya benzeri bir HTTP istemcisinden uygulamanıza POST isteği atarak QR kod üretebilirsiniz.  
+   **Örnek Kullanım (POST `http://localhost:<PORT_NUMARASI>/api/qr`):**  
+   JSON Body:
+   ```json
+   {
+       "content": "Hello World",
+       "barcodeType": "QRCode",
+       "ecc": "Q",
+       "moduleShape": "RoundRectangle",
+       "eyeShape": "Circle",
+       "frameStyle": "DoubleBorder",
+       "useGradient": true
+   }
+   ```
 
 ## 💻 Sistem Gereksinimleri
 

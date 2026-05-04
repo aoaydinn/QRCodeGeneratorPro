@@ -273,22 +273,22 @@ public partial class Form1 : Form
 
     private void BtnApi_Click(object? sender, EventArgs e)
     {
-        var btnApi = Controls.OfType<Button>().FirstOrDefault(c => c.Name == "btnApi");
+        var btnApi = grpExport.Controls.OfType<Button>().FirstOrDefault(c => c.Name == "btnApi");
         var lblApiStatus = Controls.OfType<Label>().FirstOrDefault(c => c.Name == "lblApiStatus");
 
         if (Core.ApiServer.IsRunning)
         {
             Core.ApiServer.Stop();
-            if (btnApi != null) btnApi.Text = "API Başlat";
-            if (lblApiStatus != null) { lblApiStatus.Text = "API: Kapalı"; lblApiStatus.ForeColor = Color.Red; }
+            if (btnApi != null) btnApi.Text = Core.LanguageManager.GetString("StartApiBtn");
+            if (lblApiStatus != null) { lblApiStatus.Text = Core.LanguageManager.GetString("ApiOff"); lblApiStatus.ForeColor = Color.Red; }
         }
         else
         {
             try
             {
                 Core.ApiServer.Start();
-                if (btnApi != null) btnApi.Text = "API Durdur";
-                if (lblApiStatus != null) { lblApiStatus.Text = "API: Çalışıyor (localhost:5000)"; lblApiStatus.ForeColor = Color.Green; }
+                if (btnApi != null) btnApi.Text = Core.LanguageManager.GetString("StopApiBtn");
+                if (lblApiStatus != null) { lblApiStatus.Text = $"{Core.LanguageManager.GetString("ApiRunning")} (localhost:{Core.ApiServer.Port})"; lblApiStatus.ForeColor = Color.Green; }
             }
             catch (Exception ex)
             {
